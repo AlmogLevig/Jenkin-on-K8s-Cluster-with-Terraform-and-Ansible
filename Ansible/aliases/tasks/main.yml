@@ -1,0 +1,13 @@
+# #####################
+#  transfering aliases
+# #####################
+- name: Copying the .bash_aliases directory
+  ansible.builtin.copy:
+    src: ../Aliases/.bash_aliases
+    dest: /home/{{ ansible_user }}
+
+- name: source .bashrc 
+  become_method: sudo
+  become: true
+  shell: ". /home/{{ ansible_user }}/.bash_aliases && . /home/{{ ansible_user }}/.bashrc"
+...
