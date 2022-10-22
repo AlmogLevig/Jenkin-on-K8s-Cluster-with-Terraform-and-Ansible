@@ -1,0 +1,23 @@
+- name: "creating Jenkins Password file"
+  remote_user: "{{ ansible_user }}"
+  become: true
+  become_method: sudo
+  become_user: root
+  command: "{{ item }}"
+  with_items:
+    - kubectl cp $(kgpo --output=name --namespace=devops-tools |  sed "s/^.\{4\}//"):var/jenkins_home/secrets/initialAdminPassword -n devops-tools /home/{{ ansible_user }}/pswd.txt
+  ignore_errors: true
+
+- name: "Read Jenkins Password"
+  remote_user: "{{ ansible_user }}"
+  become: true
+  become_method: sudo
+  become_user: root
+  command: "{{ item }}"
+  with_items:
+    - cat /home/{{ ansible_user }}/pswd.txt
+  register: pwsd
+
+- debug:
+    var: pwsd.stdout
+...

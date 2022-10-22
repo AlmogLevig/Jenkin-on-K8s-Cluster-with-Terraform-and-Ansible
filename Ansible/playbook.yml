@@ -1,0 +1,76 @@
+#######################
+# worker Configuration
+#######################
+- hosts: workers
+  remote_user: "{{ ansible_user }}"
+  become: yes
+  become_method: sudo
+  become_user: root
+  name: setting up the workers
+  tasks:
+  - name: setting up the hostname in worker
+    hostname:
+      name: "{{ worker_name }}"
+
+#######################
+# Cluster Configuration
+#######################
+- hosts: "masters, workers"
+  remote_user: "{{ ansible_user }}"
+  become: yes
+  become_method: sudo
+  become_user: root
+  gather_facts: yes
+  connection: ssh
+  roles:
+    - update
+    - docker
+    - containerd
+    - kubernetes
+    - swap
+    - update
+    - aliases
+
+#####################
+# Master Configuration
+######################
+- hosts: masters
+  remote_user: "{{ ansible_user }}"
+  become: true
+  become_method: sudo
+  become_user: root
+  gather_facts: yes
+  connection: ssh
+  roles:
+    - init-master
+
+############
+# Add Worker
+############
+- hosts: workers
+  remote_user: "{{ ansible_user }}"
+  become: true
+  become_method: sudo
+  become_user: root
+  gather_facts: yes
+  connection: ssh
+  roles:
+    - add-worker
+
+############################
+# Deploy Jenkins and Ingress
+############################
+- hosts: masters
+  remote_user: "{{ ansible_user }}"
+  become: true
+  become_method: sudo
+  become_user: root
+  gather_facts: yes
+  connection: ssh
+  roles:
+  # Deploy Ingress controller
+    - ingress
+  # Deploy Jenkins-Server
+    - jenkins-server
+  # Print the initialPassword of Jenkins-Server
+    - jenkins-pswd

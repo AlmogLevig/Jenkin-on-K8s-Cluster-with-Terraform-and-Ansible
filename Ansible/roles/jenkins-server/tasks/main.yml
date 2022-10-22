@@ -1,0 +1,19 @@
+# # #####################
+# # Deploy Jenkins Server
+# # ####################
+
+- name: Copying the yml directory
+  ansible.builtin.copy:
+    src: ../k8s/Jenkins-server
+    dest: /home/{{ ansible_user }}
+
+- name: applying service-account
+  become_user: "{{ ansible_user }}"
+  become_method: sudo
+  become: true
+  command: "{{ item }}"
+  with_items:
+    - kubectl create namespace devops-tools
+    - kubectl apply --recursive -f /home/{{ ansible_user }}/Jenkins-server/
+- pause: seconds=30
+...
