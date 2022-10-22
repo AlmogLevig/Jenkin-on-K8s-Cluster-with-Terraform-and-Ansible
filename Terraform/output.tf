@@ -1,6 +1,6 @@
 output "ssh_master" {
   description = "Master ssh command"
-  value       = "ssh -i ${var.key_path}${var.key_name} ubuntu@${aws_instance.master.public_ip}"
+  value       = "ssh -i ${var.key_path}/${var.key_name}.pem ubuntu@${aws_instance.master.public_ip}"
 }
 
 output "master_public_ip" {
@@ -15,7 +15,7 @@ output "agents_public_ip" {
 
 output "ssh_agents" {
   description = "Agents ssh command"
-  value       =  flatten([ for i in aws_instance.agents[*].public_ip : "ssh -i ${var.key_path}${var.key_name} ubuntu@${i}"])
+  value       =  flatten([ for i in aws_instance.agents[*].public_ip : "ssh -i ${var.key_path}/${var.key_name}.pem ubuntu@${i}"])
 }
 
 output "Ansible_command" {
