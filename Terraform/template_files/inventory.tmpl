@@ -1,0 +1,18 @@
+[masters]
+master ansible_host=${master}
+
+[workers]
+%{ for count, agent in agents ~}
+worker${count} ansible_host=${agent} worker_name=worker${count}
+%{ endfor ~}
+
+[masters:vars]
+ansible_user=${ansible_user}
+master_ip=${master}
+
+[workers:vars]
+ansible_user=${ansible_user}
+%{ for agent in agents ~}
+worker_ip=${agent}
+%{ endfor ~}
+
