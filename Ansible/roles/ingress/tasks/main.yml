@@ -1,0 +1,23 @@
+- name: Copying the yml directory
+  ansible.builtin.copy:
+    src: ../k8s/Ingress
+    dest: /home/{{ ansible_user }}
+
+- name: applying ingress-controller
+  become_user: "{{ ansible_user }}"
+  become_method: sudo
+  become: true
+  command: "{{ item }}"
+  with_items:
+    - kubectl apply -f /home/{{ ansible_user }}/Ingress/ingress-cont.yaml
+    - kubectl delete -A ValidatingWebhookConfiguration ingress-nginx-admission
+- pause: seconds=20
+
+- name: applying ingress
+  become_user: "{{ ansible_user }}"
+  become_method: sudo
+  become: true
+  command: "{{ item }}"
+  with_items:
+    - kubectl apply -f /home/{{ ansible_user }}/Ingress/ingress.yaml -n devops-tools
+...
