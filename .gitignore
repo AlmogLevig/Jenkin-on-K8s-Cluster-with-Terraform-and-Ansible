@@ -28,10 +28,6 @@ terraform.tfvars
 # Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
 # example: *tfplan*
 
-
 # Ansible Hosts and ansible.cfg
-ansible.cfg
-hosts
-
-# volume.yml
-*K8s/Jenkins-server/volume.yml 
+*Ansible/ansible.cfg
+*Ansible/hosts
