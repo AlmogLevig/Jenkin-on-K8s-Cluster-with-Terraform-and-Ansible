@@ -28,6 +28,7 @@ alias g_clo='git clone'
 alias g_sta='git status'
 alias g_aac='git add . && git commit'
 alias g_fet='git fetch'
+alias g_tre='git log --graph --pretty=oneline --abbrev=commit'
 
 ############
 ## Docker ##
